@@ -1,23 +1,59 @@
+html, body, main {
+  background-color: #eee; }
+
 .App {
   text-align: center; }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px; }
-
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white; }
+.App-header h2 {
+  color: #274086;
+  font-family: "Droid Sans", sans-serif;
+  font-size: 40px;
+  font-weight: bold; }
 
 .App-intro {
   font-size: large; }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg); }
-  to {
-    transform: rotate(360deg); } }
+.green {
+  color: green; }
+
+.red {
+  color: red; }
+
+.section {
+  clear: both;
+  padding: 0;
+  margin: 0;
+  margin-top: 30px;
+  zoom: 1;
+  /* For IE 6/7 */ }
+  .section:before, .section:after {
+    content: "";
+    display: table;
+    clear: both; }
+
+.col {
+  display: block;
+  float: left;
+  margin: 1% 0 1% 1.6%;
+  width: 49.2%; }
+  .col:first-child {
+    margin-left: 0; }
+
+.box {
+  font-family: "Droid Sans", sans-serif;
+  border: 5px solid #274086;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box; }
+
+.errorCCD {
+  font-family: serif;
+  font-style: italic; }
+
+/*  GO FULL WIDTH AT LESS THAN 480 PIXELS */
+@media only screen and (max-width: 480px) {
+  .col {
+    margin: 1% 0 1% 0%;
+    width: 100%; } }
 
 /*# sourceMappingURL=app.css.map */
