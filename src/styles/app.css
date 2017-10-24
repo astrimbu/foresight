@@ -1,42 +1,113 @@
-/*
-Error: Invalid CSS after "}": expected "}", was ""
-        on line 108 of app.scss
+html, body, main {
+  font-family: "Droid Serif", serif;
+  background-color: #eee; }
 
-103: 	}
-104:   .justifyRight, .justifyLeft { text-align: center; }
-105:   .justifyLeft { margin-bottom: 10px; }
-106: }
+.droid {
+  font-family: "Droid Sans", sans-serif; }
 
-Backtrace:
-app.scss:108
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/scss/parser.rb:1278:in `expected'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/scss/parser.rb:1208:in `expected'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/scss/parser.rb:1203:in `tok!'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/scss/parser.rb:679:in `block'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/scss/parser.rb:670:in `ruleset'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/scss/parser.rb:696:in `block_child'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/scss/parser.rb:689:in `block_contents'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/scss/parser.rb:137:in `stylesheet'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/scss/parser.rb:41:in `parse'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/engine.rb:414:in `_to_tree'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/engine.rb:389:in `_render_with_sourcemap'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/engine.rb:307:in `render_with_sourcemap'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/plugin/compiler.rb:462:in `update_stylesheet'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/plugin/compiler.rb:209:in `each'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/plugin/compiler.rb:443:in `on_file_changed'
-/var/lib/gems/2.3.0/gems/sass-3.5.1/lib/sass/plugin/compiler.rb:320:in `block in watch'
-/var/lib/gems/2.3.0/gems/sass-listen-4.0.0/lib/sass-listen/event/config.rb:23:in `call'
-/var/lib/gems/2.3.0/gems/sass-listen-4.0.0/lib/sass-listen/event/processor.rb:115:in `_process_changes'
-/var/lib/gems/2.3.0/gems/sass-listen-4.0.0/lib/sass-listen/event/processor.rb:19:in `block in loop_for'
-/var/lib/gems/2.3.0/gems/sass-listen-4.0.0/lib/sass-listen/event/processor.rb:15:in `loop'
-/var/lib/gems/2.3.0/gems/sass-listen-4.0.0/lib/sass-listen/event/processor.rb:15:in `loop_for'
-/var/lib/gems/2.3.0/gems/sass-listen-4.0.0/lib/sass-listen/event/loop.rb:84:in `_wait_for_changes'
-/var/lib/gems/2.3.0/gems/sass-listen-4.0.0/lib/sass-listen/event/loop.rb:42:in `block in setup'
-/var/lib/gems/2.3.0/gems/sass-listen-4.0.0/lib/sass-listen/internals/thread_pool.rb:6:in `block in add'
-*/
-body:before {
-  white-space: pre;
-  font-family: monospace;
-  content: "Error: Invalid CSS after \"}\": expected \"}\", was \"\"\A         on line 108 of app.scss\A \A 103: 	}\A 104:   .justifyRight, .justifyLeft { text-align: center; }\A 105:   .justifyLeft { margin-bottom: 10px; }\A 106: }"; }
+.App {
+  text-align: center; }
+
+.App-header h2 {
+  color: #274086;
+  font-family: "Droid Sans", sans-serif;
+  font-size: 40px;
+  font-weight: bold; }
+
+.App-intro {
+  font-size: large; }
+
+.green {
+  color: green; }
+
+.yellow {
+  color: #ff9900; }
+
+.red {
+  color: red; }
+
+.section {
+  clear: both;
+  padding: 0 10px 0 10px;
+  margin: 0;
+  zoom: 1;
+  /* For IE 6/7 */ }
+  .section:before, .section:after {
+    content: "";
+    display: table; }
+  .section:after {
+    clear: both; }
+
+.col {
+  display: block;
+  float: left;
+  margin: 1% 0 1% 1.6%;
+  width: 49.2%; }
+  .col:first-child {
+    margin-left: 0; }
+
+.justifyRight {
+  text-align: right; }
+
+.justifyLeft {
+  text-align: left; }
+
+.box {
+  max-width: 1000px;
+  margin: 0 auto;
+  border: 5px solid #274086;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box; }
+  .box h3 {
+    font-family: "Droid Sans", sans-serif; }
+
+.top {
+  margin-top: 30px; }
+
+.errorCCD {
+  font-family: serif;
+  font-style: italic; }
+
+.labData {
+  margin-bottom: 0.7em; }
+
+.missingVars {
+  margin: 18.72px 0 18.72px 0; }
+
+.grommetStyleButton {
+  flex: 0 0 auto;
+  padding: 6px 22px;
+  font-family: "Muli", sans-serif;
+  background-color: #274086;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  border: 2px solid #274086;
+  border-radius: 5px;
+  font-size: 1.1875rem;
+  line-height: 24px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  outline: none;
+  min-width: 120px;
+  max-width: 384px;
+  color: white; }
+  .grommetStyleButton:hover {
+    -webkit-box-shadow: 0 0 0 2px #274086;
+    box-shadow: 0 0 0 2px #274086; }
+  .grommetStyleButton:focus {
+    outline: -webkit-focus-ring-color auto 5px; }
+
+/*  GO FULL WIDTH AT LESS THAN 480 PIXELS */
+@media only screen and (max-width: 480px) {
+  .col {
+    margin: 1% 0 1% 0%;
+    width: 100%; }
+
+  .justifyRight, .justifyLeft {
+    text-align: center; }
+
+  .justifyLeft {
+    margin-bottom: 10px; } }
+
+/*# sourceMappingURL=app.css.map */
