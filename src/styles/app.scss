@@ -1,9 +1,14 @@
 $blue: #274086;
 $droid: 'Droid Sans', sans-serif;
+$droid-serif: 'Droid Serif', serif;
+$muli: "Muli", sans-serif;
 
-html, body, main {
+html, body, main { 
+  font-family: $droid-serif;
   background-color: #eee;
 }
+
+.droid { font-family: $droid }
 
 .App {
   text-align: center;
@@ -16,42 +21,77 @@ html, body, main {
   font-weight: bold;
 }
 
-.App-intro {
-  font-size: large;
-}
+.App-intro { font-size: large; }
 
-.green {color: green;}
-.red {color: red;}
+.green { color: green; }
+.yellow { color: #ff9900; }
+.red { color: red ;}
 
 .section {
   clear: both;
-  padding: 0;
+  padding: 0 10px 0 10px;
   margin: 0;
-  margin-top: 30px;
 	&:before,
-	&:after { content:""; display:table; clear:both; }
+	&:after { content:""; display:table; }
+  &:after { clear:both; }
 	zoom: 1; /* For IE 6/7 */
 }
 
 .col {
   display: block;
-  float:left;
+  float: left;
   margin: 1% 0 1% 1.6%;
   width: 49.2%;
   &:first-child { margin-left: 0; }
 }
 
+.justifyRight { text-align: right; }
+.justifyLeft { text-align: left; }
+
 .box {
-  font-family: $droid;
+  max-width: 1000px;
+  margin: 0 auto;
   border: 5px solid $blue;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+  h3 { font-family: $droid }
 }
+
+.top { margin-top: 30px; }
 
 .errorCCD {
   font-family: serif;
   font-style: italic;
+}
+
+.labData { margin-bottom: 0.7em; }
+
+.missingVars { margin: 18.72px 0 18.72px 0; }
+
+.grommetStyleButton {
+  flex: 0 0 auto;
+  padding: 6px 22px;
+  font-family: $muli;
+  background-color: $blue;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  border: 2px solid $blue;
+  border-radius: 5px;
+  font-size: 1.1875rem;
+  line-height: 24px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  outline: none;
+  min-width: 120px;
+  max-width: 384px;
+  color: white;
+  &:hover { 
+    -webkit-box-shadow: 0 0 0 2px $blue;
+    box-shadow: 0 0 0 2px $blue;
+  }
+  &:focus {
+    outline: -webkit-focus-ring-color auto 5px;
 }
 
 /*  GO FULL WIDTH AT LESS THAN 480 PIXELS */
@@ -61,5 +101,7 @@ html, body, main {
 		margin: 1% 0 1% 0%;
     width: 100%;
 	}
+  .justifyRight, .justifyLeft { text-align: center; }
+  .justifyLeft { margin-bottom: 10px; }
 }
 

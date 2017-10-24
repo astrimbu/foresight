@@ -32,34 +32,70 @@ class Header extends Component {
 }
 
 
-class XMLStatus extends Component {
+class ErrorMessage extends Component {
 
   render() {
-    if (this.props.status) {
-      return <h3 className="green">XML!</h3>    
-    } else if (this.props.status === null) {
-      return <h3>XML?</h3>    
-    } else {
-      return <h3 className="red">Not XML</h3>
-    }
+    if (this.props.xml === false) {
+      return (
+        <div className="section top">
+          <div className="box">
+            <h3 className="red">File must be in XML format.</h3>
+          </div>
+        </div>
+      )
+    } else if (this.props.ccd === false) {
+      return (
+        <div className="section top">
+          <div className="box">
+            <h3 className="red">File is not a CCD.</h3>
+            <p className="errorCCD">{this.props.error}</p>
+          </div>
+        </div>
+      )
+    } else if (this.props.missingVars.length > 0) {
+      return (
+        <div className="section top">
+          <div className="box">
+            <h3 className="red">Missing Laboratory Data</h3>
+            <p className="errorCCD">
+              This CCD is missing laboratory data for the following variables:
+            </p>
+            <p className="missingVars">
+              <b>{this.props.missingVars.join(", ")}</b>
+            </p>
+          </div>
+        </div>
+      )
+    } else return (<div></div>)
   }
 }
 
-class CCDStatus extends Component {
+
+class Variable extends Component {
 
   render() {
-    if (this.props.status) {
-      return <h3 className="green">CCD!</h3>    
-    } else if (this.props.status === null) {
-      return <h3>CCD?</h3>
-    } else {
-      return (
-        <div>
-          <h3 className="red">Not CCD</h3>    
-          <p className="errorCCD">{this.props.error}</p>
-        </div>
-      )
+    let value
+    let units
+    if (this.props.value === '') {
+      value = null
+      units = null
+    } else { 
+      value = this.props.value
+      if (this.props.units === undefined) {
+        units = null
+      } else { units = "(" + this.props.units + ")" }
     }
+
+    return (
+      <div className="section">
+        <div className="col justifyRight">
+          <b>{this.props.name}:</b>
+        </div>
+        <div className="col justifyLeft">
+          {value} {units}
+        </div>
+      </div>
+    )
   }
 }
 
@@ -67,19 +103,67 @@ class CCDStatus extends Component {
 class Variables extends Component {
 
   render() {
-    return (
-      <div className="box col">
-        <h3>{this.props.name}</h3>
-        <h3>Sex: {this.props.sex}</h3>
-        <h3>Age: {this.props.age}</h3>
-        <h3>eGFR: {this.props.gfr}</h3>
-        <h3>ACR: {this.props.acr}</h3>
-        <h3>Calcium: {this.props.calcium}</h3>
-        <h3>Phosphorous: {this.props.phosphorous}</h3>
-        <h3>Albumin: {this.props.albumin}</h3>
-        <h3>Bicarbonate: {this.props.bicarbonate}</h3>
-      </div>
-    )
+    if (this.props.isCCD) {
+      return (
+        <div className="top">
+          <h3 className="labData droid">Relevant Laboratory Data</h3>
+          <Variable name="Sex" value={this.props.sex}/>
+          <Variable name="Age" value={this.props.age} units="years"/>
+          <Variable name="GFR" value={this.props.gfr} units="mL/min/1.73m²"/>
+          <Variable name="ACR" value={this.props.acr} units="mg/g"/>
+          <Variable name="Calcium" value={this.props.calcium} units="mg/dL"/>
+          <Variable name="Phosphorous" value={this.props.phosphorous}
+            units="mg/dL"/>
+          <Variable name="Albumin" value={this.props.albumin} units="g/dL"/>
+          <Variable name="Bicarbonate" value={this.props.bicarbonate} 
+            units="mEq/L"/>
+        </div>
+      )
+    } else { return (<div></div>) }
+  }
+}
+
+
+class Results extends Component {
+
+  render() {
+    var riskResult
+    let riskHeader
+    let ckdRisk = this.props.ckdRisk
+    if (this.props.ckdRisk !== null) {
+      console.log(ckdRisk.parseFloat)
+      if (parseFloat(ckdRisk) < 5.0) {
+        riskHeader = <h2 className="green">{ckdRisk}%</h2>
+      } else if (parseFloat(ckdRisk) < 15.0) {
+        riskHeader = <h2 className="yellow">{ckdRisk}%</h2>
+      } else {
+        riskHeader = <h2 className="red">{ckdRisk}%</h2>
+      }
+      riskResult =
+        <div className="box">
+          <h3>Results</h3>
+          <p>5-year risk of progression to kidney failure requiring dialysis or transplantation:</p>
+          {riskHeader}
+        </div>
+    } else { riskResult = <div></div> }
+    if (ckdRisk !== null) {
+      return (
+        <div className="top section">
+          <Variables
+            name={this.props.name}
+            sex={this.props.sex}
+            age={this.props.age}
+            gfr={this.props.gfr}
+            acr={this.props.acr}
+            calcium={this.props.calcium}
+            phosphorous={this.props.phosphorous}
+            albumin={this.props.albumin}
+            bicarbonate={this.props.bicarbonate}
+            isCCD={this.props.isCCD}/>
+          {riskResult}
+        </div>
+      )
+    } else { return ( <div></div> ) }
   }
 }
 
@@ -104,7 +188,9 @@ class Foresight extends Component {
       calcium: '',
       phosphorous: '',
       albumin: '',
-      bicarbonate: ''
+      bicarbonate: '',
+      ckdRisk: null,
+      missingVars: []
     }
   }
 
@@ -121,7 +207,7 @@ class Foresight extends Component {
 
     // Sex
     let genderNode = xml.getElementsByTagName("administrativeGenderCode")[0]
-    let gender = genderNode.getAttribute("displayName")
+    let gender = genderNode.getAttribute("code")
     this.setState({sex: gender})
 
     // Age
@@ -130,7 +216,16 @@ class Foresight extends Component {
     let age = this.calculateAge(birthTime)
     this.setState({age: age})
 
-    this.getLabResultsSection(xml)
+    // Lab Results
+    try {  // some ccds don't have a structuredBody under topComponent
+      this.getLabResultsSection(xml)
+    } catch (e) {
+      console.log("219: no structuredBody")
+      this.setState({
+        missingVars: ["GFR", "ACR", "Calcium", "Phosphorous", "Albumin",
+          "Bicarbonate"]
+      })
+    }
   }
 
   calculateAge(dateString) {
@@ -141,34 +236,40 @@ class Foresight extends Component {
     var today = new Date()
     var birthDate = new Date(date)
     var age = today.getFullYear() - birthDate.getFullYear()
-    var m = today.getMonth() - birthDate.getMonth()
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--
-    }
+    var mo = today.getMonth() - birthDate.getMonth()
+    if (mo < 0 || (mo === 0 && today.getDate() < birthDate.getDate())) age--
     return age
   }
 
   getLabResultsSection(xml) {
-    let labVarsSection
     let topComponent = xml.getElementsByTagName("component")[0]
     let structuredBody = topComponent.getElementsByTagName("structuredBody")[0]
     let structuredBodyComponents =
       structuredBody.getElementsByTagName("component")
     for (let component of structuredBodyComponents) {
       let section = component.getElementsByTagName("section")[0]
-      try {
-        // try-catch because some <section>'s don't contain <code>
+      try {  // try-catch because some <section>'s don't contain <code>
         let codeNode = section.getElementsByTagName("code")[0]
         let code = codeNode.getAttribute("code")
         if (code === "30954-2") {
-          labVarsSection = section
-          console.log(labVarsSection)
+          this.setState({labResultsSectionPresent: true})
           let entries = section.getElementsByTagName("entry")
+          // Should have getLabResults return something to indicate
+          // whether lab data was found or not
           this.getLabResults(entries)
         }
       } catch (e) {}
     }
-  } 
+    if (this.state.labResultsSectionPresent === null) {
+      this.missingAllLabVars()}
+    } 
+
+  missingAllLabVars() {
+    this.setState({
+      missingVars: ["GFR", "ACR", "Calcium", "Phosphorous", "Albumin",
+        "Bicarbonate"]
+    })
+  }
 
   getLabResults(entries) {
     for (let entry of entries) {
@@ -196,8 +297,30 @@ class Foresight extends Component {
           this.setState({calcium: value})
           break
         default:
-          console.log("irrelevent: " + code)
+          break
       }
+    }
+    if (this.state.sex !== '' &&
+        this.state.age !== '' &&
+        this.state.gfr !== '' &&
+        this.state.acr !== '' &&
+        this.state.calcium !== '' &&
+        this.state.phosphorous !== '' &&
+        this.state.albumin !== '' &&
+        this.state.bicarbonate !== '') {
+      let calculatedRisk= this.calculateCKDRisk()
+      this.setState({ckdRisk: calculatedRisk})
+    } else {
+      let missingVarsTemp = []
+      if (this.state.sex === '') { missingVarsTemp.push("Sex") }
+      if (this.state.age === '') { missingVarsTemp.push("Age") }
+      if (this.state.gfr === '') { missingVarsTemp.push("GFR") }
+      if (this.state.acr === '') { missingVarsTemp.push("ACR") }
+      if (this.state.calcium === '') { missingVarsTemp.push("Calcium") }
+      if (this.state.phosphorous === '') { missingVarsTemp.push("Phosphorous") }
+      if (this.state.albumin === '') { missingVarsTemp.push("Albumin") }
+      if (this.state.bicarbonate === '') { missingVarsTemp.push("Bicarbonate") }
+      this.setState({missingVars: missingVarsTemp})
     }
   }
 
@@ -209,13 +332,29 @@ class Foresight extends Component {
     return value
   }
 
+  calculateCKDRisk() {
+    let sumbetaxbar = -7.3920
+    let sex
+    if (this.state.sex === "M") { sex = 1 }
+    else { sex = 0 }
+    console.log('sex: ' + sex)
+    let sumbetax = ((0.16117 * sex) + (-0.19883 * (this.state.age/10)) +
+      (-0.49360 * (this.state.gfr/5)) + (0.35066 * Math.log(this.state.acr)) +
+      (-0.22129 * this.state.calcium) + (0.24197 * this.state.phosphorous) +
+      (-0.33867 * this.state.albumin) + (-0.07429 * this.state.bicarbonate))
+    console.log('sumbetax: ' + sumbetax)
+    let probability = 1 - Math.pow(0.929, Math.exp(sumbetax - sumbetaxbar))
+    probability *= 100
+    probability = probability.toFixed(1)
+    return probability
+  }
 
   determineCCD() {
     try {
       let typeId = this.state.ccdXML.getElementsByTagName("typeId")[0]
       var root = typeId.getAttribute("root")
       var ext = typeId.getAttribute("extension")
-    } catch (e) {}
+    } catch (e) { console.log("338: determineCCD()") }
     let ccdRoot = "2.16.840.1.113883.1.3"
     let ccdExt = "POCD_HD000040"
     if ((root === ccdRoot) && (ext === ccdExt)) {
@@ -231,17 +370,35 @@ class Foresight extends Component {
   }
 
   handleFiles = files => {
-    const extension = files[0].name.split('.').pop().toLowerCase()
-    this.setState({isXML: (extension === 'xml')})
-    if (extension === 'xml') {
-      var reader = new FileReader()
-      reader.onload = e => {
-        let contents = reader.result
-        this.setState({ccdText: contents})
-        this.textToXML(contents)
-      }
-      reader.readAsText(files[0])
-    } else { this.setState({isCCD: false}) }
+    this.setState({ // reset variables so they don't persist btwn ccds
+      name: '',
+      sex: '',
+      age: '',
+      gfr: '',
+      acr: '',
+      calcium: '',
+      phosphorous: '',
+      albumin: '',
+      bicarbonate: '',
+      ckdRisk: null,
+      missingVars: [],
+      labResultsSectionPresent: null 
+    })
+    // try-catch because error is thrown when cancelling an upload
+    // after a succesful document upload
+    try {
+      const extension = files[0].name.split('.').pop().toLowerCase()
+      this.setState({isXML: (extension === 'xml')})
+      if (extension === 'xml') {
+        var reader = new FileReader()
+        reader.onload = e => {
+          let contents = reader.result
+          this.setState({ccdText: contents})
+          this.textToXML(contents)
+        }
+        reader.readAsText(files[0])
+      } else { this.setState({isCCD: false}) }
+    } catch (e) { console.log("373: handleFiles") }
   }
 
   textToXML(text) {
@@ -267,28 +424,29 @@ class Foresight extends Component {
   render() {
     return (
       <div className="Foresight">
-        <p className="App-intro">
-          To get started, upload your <code>CCD</code>.
+        <p className="">
+          To get started, upload your CCD.
         </p>
         <ReactFileReader handleFiles={this.handleFiles} fileTypes={'.xml'}>
-          <button>Upload</button>
+          <button className="grommetStyleButton">Upload</button>
         </ReactFileReader>
-        <div className="section">
-          <div className="box col">
-            <XMLStatus status={this.state.isXML}/>
-            <CCDStatus status={this.state.isCCD} error={this.state.errorCCD}/>
-          </div>
-          <Variables
-            name={this.state.name}
-            sex={this.state.sex}
-            age={this.state.age}
-            gfr={this.state.gfr}
-            acr={this.state.acr}
-            calcium={this.state.calcium}
-            phosphorous={this.state.phosphorous}
-            albumin={this.state.albumin}
-            bicarbonate={this.state.bicarbonate}/>
-        </div>
+        <ErrorMessage 
+          xml={this.state.isXML} 
+          ccd={this.state.isCCD}
+          error={this.state.errorCCD}
+          missingVars={this.state.missingVars}/>
+        <Results ckdRisk={this.state.ckdRisk}/>
+        <Variables
+          name={this.state.name}
+          sex={this.state.sex}
+          age={this.state.age}
+          gfr={this.state.gfr}
+          acr={this.state.acr}
+          calcium={this.state.calcium}
+          phosphorous={this.state.phosphorous}
+          albumin={this.state.albumin}
+          bicarbonate={this.state.bicarbonate}
+          isCCD={this.state.isCCD}/>
       </div>
     )
   }
